@@ -21,7 +21,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.BluetoothChat"
         tools:ignore="AllowBackup">
-        <activity android:name=".MainActivity">
+        <activity android:name=".activity.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
