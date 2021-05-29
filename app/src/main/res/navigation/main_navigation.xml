@@ -1,6 +1,40 @@
 <?xml version="1.0" encoding="utf-8"?>
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/main_navigation">
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/enableBluetoothFragment">
 
+    <fragment
+        android:id="@+id/bluetoothChatFragment"
+        android:name="xyz.teamgravity.bluetoothchat.fragment.BluetoothChatFragment"
+        android:label="BluetoothChatFragment"
+        tools:layout="@layout/fragment_bluetooth_chat">
+        <action
+            android:id="@+id/action_find_new_device"
+            app:destination="@id/deviceListFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/deviceListFragment"
+        android:name="xyz.teamgravity.bluetoothchat.fragment.DeviceScanFragment"
+        android:label="DeviceListFragment"
+        tools:layout="@layout/fragment_device_scan" />
+    <fragment
+        android:id="@+id/locationRequiredFragment"
+        android:name="xyz.teamgravity.bluetoothchat.fragment.LocationRequiredFragment"
+        android:label="LocationRequiredFragment"
+        tools:layout="@layout/fragment_location_required">
+        <action
+            android:id="@+id/action_start_chat"
+            app:destination="@id/bluetoothChatFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/enableBluetoothFragment"
+        android:name="xyz.teamgravity.bluetoothchat.fragment.EnableBluetoothFragment"
+        android:label="EnableBluetoothFragment"
+        tools:layout="@layout/fragment_enable_bluetooth">
+        <action
+            android:id="@+id/action_check_location_permissions"
+            app:destination="@id/locationRequiredFragment" />
+    </fragment>
 </navigation>

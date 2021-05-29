@@ -4,7 +4,7 @@
     package="xyz.teamgravity.bluetoothchat">
 
     <uses-feature
-        android:name="android.hardware.bluetooth"
+        android:name="android.hardware.bluetooth_le"
         android:required="true" />
 
     <uses-permission android:name="android.permission.BLUETOOTH" />
