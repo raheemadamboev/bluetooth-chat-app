@@ -11,6 +11,9 @@ import android.os.ParcelUuid
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import xyz.teamgravity.bluetoothchat.helper.chat.DeviceConnectionState
+import xyz.teamgravity.bluetoothchat.helper.constants.CONFIRM_UUID
+import xyz.teamgravity.bluetoothchat.helper.constants.MESSAGE_UUID
+import xyz.teamgravity.bluetoothchat.helper.constants.SERVICE_UUID
 import xyz.teamgravity.bluetoothchat.helper.extension.log
 import xyz.teamgravity.bluetoothchat.model.MessageModel
 
