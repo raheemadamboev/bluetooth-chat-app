@@ -13,7 +13,7 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import xyz.teamgravity.bluetoothchat.helper.constants.SERVICE_UUID
 import xyz.teamgravity.bluetoothchat.helper.extension.log
-import xyz.teamgravity.bluetoothchat.helper.scan.DeviceScanViewState
+import xyz.teamgravity.bluetoothchat.helper.util.DeviceScanViewState
 
 private const val TAG = "DeviceScanViewModel"
 

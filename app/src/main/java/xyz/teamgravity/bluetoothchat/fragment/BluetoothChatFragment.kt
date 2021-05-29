@@ -13,11 +13,11 @@ import androidx.navigation.fragment.findNavController
 import xyz.teamgravity.bluetoothchat.R
 import xyz.teamgravity.bluetoothchat.databinding.FragmentBluetoothChatBinding
 import xyz.teamgravity.bluetoothchat.helper.adapter.chat.ChatAdapter
-import xyz.teamgravity.bluetoothchat.helper.chat.DeviceConnectionState
+import xyz.teamgravity.bluetoothchat.helper.util.DeviceConnectionState
 import xyz.teamgravity.bluetoothchat.helper.extension.gone
 import xyz.teamgravity.bluetoothchat.helper.extension.log
 import xyz.teamgravity.bluetoothchat.helper.extension.visible
-import xyz.teamgravity.bluetoothchat.helper.server.ChatServer
+import xyz.teamgravity.bluetoothchat.helper.util.ChatServer
 import xyz.teamgravity.bluetoothchat.model.MessageModel
 
 private const val TAG = "BluetoothChatFragment"

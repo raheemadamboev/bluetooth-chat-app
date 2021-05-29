@@ -3,7 +3,7 @@ package xyz.teamgravity.bluetoothchat.activity
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import xyz.teamgravity.bluetoothchat.R
-import xyz.teamgravity.bluetoothchat.helper.server.ChatServer
+import xyz.teamgravity.bluetoothchat.helper.util.ChatServer
 
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {

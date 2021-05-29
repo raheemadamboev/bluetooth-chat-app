@@ -12,7 +12,7 @@ import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import xyz.teamgravity.bluetoothchat.databinding.FragmentEnableBluetoothBinding
 import xyz.teamgravity.bluetoothchat.helper.constants.REQUEST_ENABLE_BT
-import xyz.teamgravity.bluetoothchat.helper.server.ChatServer
+import xyz.teamgravity.bluetoothchat.helper.util.ChatServer
 
 class EnableBluetoothFragment : Fragment() {
 

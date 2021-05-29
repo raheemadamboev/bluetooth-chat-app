@@ -17,8 +17,8 @@ import xyz.teamgravity.bluetoothchat.helper.extension.exhaustive
 import xyz.teamgravity.bluetoothchat.helper.extension.gone
 import xyz.teamgravity.bluetoothchat.helper.extension.log
 import xyz.teamgravity.bluetoothchat.helper.extension.visible
-import xyz.teamgravity.bluetoothchat.helper.scan.DeviceScanViewState
-import xyz.teamgravity.bluetoothchat.helper.server.ChatServer
+import xyz.teamgravity.bluetoothchat.helper.util.DeviceScanViewState
+import xyz.teamgravity.bluetoothchat.helper.util.ChatServer
 
 private const val TAG = "DeviceScanFragment"
 const val GATT_KEY = "gatt_bundle_key"

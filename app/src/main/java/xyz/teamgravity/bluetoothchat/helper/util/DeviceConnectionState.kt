@@ -1,4 +1,4 @@
-package xyz.teamgravity.bluetoothchat.helper.chat
+package xyz.teamgravity.bluetoothchat.helper.util
 
 import android.bluetooth.BluetoothDevice
 

@@ -1,4 +1,4 @@
-package xyz.teamgravity.bluetoothchat.helper.server
+package xyz.teamgravity.bluetoothchat.helper.util
 
 import android.app.Application
 import android.bluetooth.*
@@ -10,7 +10,7 @@ import android.content.Context
 import android.os.ParcelUuid
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import xyz.teamgravity.bluetoothchat.helper.chat.DeviceConnectionState
+import xyz.teamgravity.bluetoothchat.helper.util.DeviceConnectionState
 import xyz.teamgravity.bluetoothchat.helper.constants.CONFIRM_UUID
 import xyz.teamgravity.bluetoothchat.helper.constants.MESSAGE_UUID
 import xyz.teamgravity.bluetoothchat.helper.constants.SERVICE_UUID
