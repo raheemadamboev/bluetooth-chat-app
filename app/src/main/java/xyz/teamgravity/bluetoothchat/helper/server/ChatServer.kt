@@ -39,15 +39,15 @@ object ChatServer {
     private var advertiseSettings: AdvertiseSettings = buildAdvertiseSettings()
     private var advertiseData: AdvertiseData = buildAdvertiseData()
 
-    // LiveData for reporting the messages sent to the device
+    // liveData for reporting the messages sent to the device
     private val _messages = MutableLiveData<MessageModel>()
     val messages = _messages as LiveData<MessageModel>
 
-    // LiveData for reporting connection requests
+    // liveData for reporting connection requests
     private val _connectionRequest = MutableLiveData<BluetoothDevice>()
     val connectionRequest = _connectionRequest as LiveData<BluetoothDevice>
 
-    // TODO LiveData for reporting the messages sent to the device
+    // livedata for whether bluetooth is enabled or not
     private val _requestEnableBluetooth = MutableLiveData<Boolean>()
     val requestEnableBluetooth = _requestEnableBluetooth as LiveData<Boolean>
 
@@ -57,7 +57,7 @@ object ChatServer {
     private var gattClient: BluetoothGatt? = null
     private var gattClientCallback: BluetoothGattCallback? = null
 
-    // Properties for current chat device connection
+    // properties for current chat device connection
     private var currentDevice: BluetoothDevice? = null
 
     // TODO determine what it is
