@@ -17,11 +17,10 @@ import xyz.teamgravity.bluetoothchat.helper.extension.exhaustive
 import xyz.teamgravity.bluetoothchat.helper.extension.gone
 import xyz.teamgravity.bluetoothchat.helper.extension.log
 import xyz.teamgravity.bluetoothchat.helper.extension.visible
-import xyz.teamgravity.bluetoothchat.helper.util.DeviceScanViewState
 import xyz.teamgravity.bluetoothchat.helper.util.ChatServer
+import xyz.teamgravity.bluetoothchat.helper.util.DeviceScanViewState
 
 private const val TAG = "DeviceScanFragment"
-const val GATT_KEY = "gatt_bundle_key"
 
 class DeviceScanFragment : Fragment() {
 
@@ -82,7 +81,7 @@ class DeviceScanFragment : Fragment() {
     private fun showResults(scanResults: Map<String, BluetoothDevice>) {
         if (scanResults.isNotEmpty()) {
             binding.deviceList.visible()
-            deviceScanAdapter.updateItems(scanResults.values.toList())
+            deviceScanAdapter.submitList(scanResults.values.toList())
 
             binding.scanningLayout.gone()
             binding.noDevicesText.gone()

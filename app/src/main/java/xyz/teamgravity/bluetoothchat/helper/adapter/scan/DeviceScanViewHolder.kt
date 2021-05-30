@@ -13,14 +13,14 @@ class DeviceScanViewHolder(
     private var bluetoothDevice: BluetoothDevice? = null
 
     init {
-        itemView.setOnClickListener(this)
+        binding.root.setOnClickListener(this)
     }
 
     fun bind(device: BluetoothDevice) {
         bluetoothDevice = device
         binding.apply {
-            deviceName.text = device.name
-            deviceAddress.text = device.address
+            deviceNameT.text = device.name
+            deviceAddressT.text = device.address
         }
     }
 
