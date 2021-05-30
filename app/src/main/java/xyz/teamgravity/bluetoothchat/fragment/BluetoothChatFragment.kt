@@ -31,44 +31,74 @@ class BluetoothChatFragment : Fragment() {
 
     private lateinit var locationManager: LocationManager
 
-    private val deviceConnectionObserver = Observer<DeviceConnectionState> { state ->
-        when (state) {
-            is DeviceConnectionState.Connected -> {
-                val device = state.device
-                log(TAG, "Gatt connection observer: have device $device")
-                chatWith(device)
-            }
-            is DeviceConnectionState.Disconnected -> {
-                showDisconnected()
-            }
-        }
-    }
-
-    private val connectionRequestObserver = Observer<BluetoothDevice> { device ->
-        log(TAG, "Connection request observer: have device $device")
-        ChatServer.setCurrentChatConnection(device)
-    }
-
-    private val messageObserver = Observer<MessageModel> { message ->
-        log(TAG, "Have message ${message.text}")
-        adapter.addMessage(message)
-    }
-
     private val adapter = ChatAdapter()
 
     private val inputMethodManager by lazy {
         requireContext().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
     }
 
-
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         _binding = FragmentBluetoothChatBinding.inflate(inflater, container, false)
+        return binding.root
+    }
 
-        log(TAG, "chatWith: set adapter $adapter")
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        lateInIt()
+        button()
+        updateUI()
+    }
+
+    override fun onStart() {
+        super.onStart()
+        observe()
+    }
+
+    private fun lateInIt() {
+        locationManager = requireActivity().getSystemService(Context.LOCATION_SERVICE) as LocationManager
+    }
+
+    private fun button() {
+        onScan()
+        onSendMessage()
+    }
+
+    private fun updateUI() {
         binding.recyclerView.adapter = adapter
-
         showDisconnected()
+    }
 
+    private fun observe() {
+        ChatServer.connectionRequest.observe(viewLifecycleOwner, connectionRequestObserver)
+        ChatServer.deviceConnection.observe(viewLifecycleOwner, deviceConnectionObserver)
+        ChatServer.messages.observe(viewLifecycleOwner, messageObserver)
+    }
+
+    private fun showDisconnected() {
+        hideKeyboard()
+        binding.apply {
+            notConnectedContainer.visible()
+            connectedContainer.gone()
+        }
+    }
+
+    private fun hasGPSEnabled() = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)
+
+    private fun hideKeyboard() = inputMethodManager.hideSoftInputFromWindow(binding.root.windowToken, 0)
+
+    private fun prepareChat(device: BluetoothDevice) {
+        binding.apply {
+            connectedContainer.visible()
+            notConnectedContainer.gone()
+
+            val chattingWithString = resources.getString(R.string.chatting_with_device, device.address)
+            connectedDeviceNameT.text = chattingWithString
+        }
+    }
+
+    // scan button
+    private fun onScan() {
         binding.connectDevicesB.setOnClickListener {
             if (hasGPSEnabled()) {
                 findNavController().navigate(BluetoothChatFragmentDirections.actionFindNewDevice())
@@ -76,49 +106,50 @@ class BluetoothChatFragment : Fragment() {
                 startActivity(Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS))
             }
         }
-
-        return binding.root
     }
 
-    override fun onStart() {
-        super.onStart()
-        ChatServer.connectionRequest.observe(viewLifecycleOwner, connectionRequestObserver)
-        ChatServer.deviceConnection.observe(viewLifecycleOwner, deviceConnectionObserver)
-        ChatServer.messages.observe(viewLifecycleOwner, messageObserver)
-    }
+    // send message button
+    private fun onSendMessage() {
+        binding.apply {
+            sendMessageB.setOnClickListener {
+                val message = binding.messageField.text.toString()
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        locationManager = requireActivity().getSystemService(Context.LOCATION_SERVICE) as LocationManager
-    }
+                // only send message if it is not empty
+                if (message.isNotEmpty()) {
 
-    private fun chatWith(device: BluetoothDevice) {
-        binding.connectedContainer.visible()
-        binding.notConnectedContainer.gone()
+                    ChatServer.sendMessage(message)
 
-        val chattingWithString = resources.getString(R.string.chatting_with_device, device.address)
-        binding.connectedDeviceNameT.text = chattingWithString
-        binding.sendMessageB.setOnClickListener {
-            val message = binding.messageField.text.toString()
-            // only send message if it is not empty
-            if (message.isNotEmpty()) {
-                ChatServer.sendMessage(message)
-                // clear message
-                binding.messageField.setText("")
+                    // clear message
+                    messageField.setText("")
+                }
             }
         }
     }
 
-    private fun hasGPSEnabled() = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)
+    // connected or disconnected observer
+    private val deviceConnectionObserver = Observer<DeviceConnectionState> { state ->
+        when (state) {
+            is DeviceConnectionState.Connected -> {
+                log(TAG, "Gatt connection observer: have device ${state.device}")
+                prepareChat(state.device)
+            }
 
-    private fun showDisconnected() {
-        hideKeyboard()
-        binding.notConnectedContainer.visible()
-        binding.connectedContainer.gone()
+            is DeviceConnectionState.Disconnected -> {
+                showDisconnected()
+            }
+        }
     }
 
-    private fun hideKeyboard() {
-        inputMethodManager.hideSoftInputFromWindow(binding.root.windowToken, 0)
+    // connected bluetooth device observer
+    private val connectionRequestObserver = Observer<BluetoothDevice> { device ->
+        log(TAG, "Connection request observer: have device $device")
+        ChatServer.setCurrentChatConnection(device)
+    }
+
+    // new message observer
+    private val messageObserver = Observer<MessageModel> { message ->
+        log(TAG, "Have message ${message.text}")
+        adapter.addMessage(message)
     }
 
     override fun onDestroyView() {

@@ -72,13 +72,6 @@ class LocationRequiredFragment : Fragment() {
         onPermission()
     }
 
-    // permission request button
-    private fun onPermission() {
-        binding.permissionB.setOnClickListener {
-            checkLocationPermission()
-        }
-    }
-
     private fun showError() {
         binding.apply {
             locationErrorText.visible()
@@ -105,6 +98,13 @@ class LocationRequiredFragment : Fragment() {
             permissionLauncher.launch(PERMISSIONS)
         } else {
             permissionLauncher.launch(PERMISSIONS_Q)
+        }
+    }
+
+    // permission request button
+    private fun onPermission() {
+        binding.permissionB.setOnClickListener {
+            checkLocationPermission()
         }
     }
 

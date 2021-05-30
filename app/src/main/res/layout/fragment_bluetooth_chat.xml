@@ -14,10 +14,11 @@
         android:orientation="vertical">
 
         <TextView
-            android:id="@+id/connect_device_message_t"
-            android:layout_width="wrap_content"
+            android:id="@+id/connect_device_text"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/no_connected_device_message" />
+            android:text="@string/no_connected_device_message"
+            android:textAlignment="center" />
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/connect_devices_b"
@@ -39,7 +40,8 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:padding="16dp"
-            android:textSize="18sp" />
+            android:textSize="18sp"
+            tools:text="@string/app_name" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recycler_view"
@@ -53,7 +55,10 @@
         <EditText
             android:id="@+id/message_field"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="10dp"
+            tools:ignore="Autofill,LabelFor,TextFields" />
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/send_message_b"
