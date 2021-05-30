@@ -22,12 +22,6 @@ class EnableBluetoothFragment : Fragment() {
 
     private lateinit var bluetoothLauncher: ActivityResultLauncher<Intent>
 
-    private val bluetoothEnableObserver = Observer<Boolean> { shouldPrompt ->
-        if (!shouldPrompt) {
-            // Don't need to prompt so navigate to LocationRequiredFragment
-            findNavController().navigate(EnableBluetoothFragmentDirections.actionCheckLocationPermissions())
-        }
-    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -36,18 +30,41 @@ class EnableBluetoothFragment : Fragment() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         _binding = FragmentEnableBluetoothBinding.inflate(inflater, container, false)
+        return binding.root
+    }
 
-        binding.errorAction.setOnClickListener {
-            bluetoothLauncher.launch(Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE))
-        }
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
 
+        lateInIt()
+        button()
+    }
+
+    private fun lateInIt() {
+        // when bluetooth enabled start server
         bluetoothLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
             if (result.resultCode == Activity.RESULT_OK) {
                 ChatServer.startServer(requireActivity().application)
             }
         }
+    }
 
-        return binding.root
+    private fun button() {
+        onBluetooth()
+    }
+
+    // enable bluetooth button
+    private fun onBluetooth() {
+        binding.bluetoothB.setOnClickListener {
+            bluetoothLauncher.launch(Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE))
+        }
+    }
+
+    // if bluetooth enable navigate LocationRequiredFragment
+    private val bluetoothEnableObserver = Observer<Boolean> { shouldPrompt ->
+        if (!shouldPrompt) {
+            findNavController().navigate(EnableBluetoothFragmentDirections.actionCheckLocationPermissions())
+        }
     }
 
     override fun onDestroyView() {

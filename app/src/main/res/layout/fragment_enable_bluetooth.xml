@@ -15,9 +15,10 @@
         android:text="@string/bt_not_enabled" />
 
     <Button
-        android:id="@+id/error_action"
+        android:id="@+id/bluetooth_b"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
+        android:layout_marginTop="10dp"
         android:text="@string/enable_bluetooth_prompt" />
 </LinearLayout>
