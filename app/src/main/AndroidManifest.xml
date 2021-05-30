@@ -3,8 +3,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="xyz.teamgravity.bluetoothchat">
 
-    <uses-permission
-        android:name="android.permission.BLUETOOTH"
+    <uses-feature
+        android:name="android.hardware.bluetooth"
         android:required="true" />
     <uses-feature
         android:name="android.hardware.bluetooth_le"
