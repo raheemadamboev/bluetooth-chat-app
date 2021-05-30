@@ -7,17 +7,20 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import xyz.teamgravity.bluetoothchat.databinding.FragmentEnableBluetoothBinding
-import xyz.teamgravity.bluetoothchat.helper.constants.REQUEST_ENABLE_BT
 import xyz.teamgravity.bluetoothchat.helper.util.ChatServer
 
 class EnableBluetoothFragment : Fragment() {
 
     private var _binding: FragmentEnableBluetoothBinding? = null
     private val binding get() = _binding!!
+
+    private lateinit var bluetoothLauncher: ActivityResultLauncher<Intent>
 
     private val bluetoothEnableObserver = Observer<Boolean> { shouldPrompt ->
         if (!shouldPrompt) {
@@ -35,23 +38,16 @@ class EnableBluetoothFragment : Fragment() {
         _binding = FragmentEnableBluetoothBinding.inflate(inflater, container, false)
 
         binding.errorAction.setOnClickListener {
-            // Prompt user to turn on Bluetooth (logic continues in onActivityResult()).
-            val enableBtIntent = Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE)
-            startActivityForResult(enableBtIntent, REQUEST_ENABLE_BT)
+            bluetoothLauncher.launch(Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE))
+        }
+
+        bluetoothLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+            if (result.resultCode == Activity.RESULT_OK) {
+                ChatServer.startServer(requireActivity().application)
+            }
         }
 
         return binding.root
-    }
-
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-        when (requestCode) {
-            REQUEST_ENABLE_BT -> {
-                if (resultCode == Activity.RESULT_OK) {
-                    ChatServer.startServer(requireActivity().application)
-                }
-            }
-        }
     }
 
     override fun onDestroyView() {
