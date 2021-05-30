@@ -74,7 +74,6 @@ class BluetoothChatFragment : Fragment() {
 
     override fun onStart() {
         super.onStart()
-        requireActivity().setTitle(R.string.chat_title)
         ChatServer.connectionRequest.observe(viewLifecycleOwner, connectionRequestObserver)
         ChatServer.deviceConnection.observe(viewLifecycleOwner, deviceConnectionObserver)
         ChatServer.messages.observe(viewLifecycleOwner, messageObserver)
