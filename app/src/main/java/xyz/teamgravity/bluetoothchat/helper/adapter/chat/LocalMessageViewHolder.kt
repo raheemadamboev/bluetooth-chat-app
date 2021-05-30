@@ -7,6 +7,6 @@ import xyz.teamgravity.bluetoothchat.model.MessageModel
 class LocalMessageViewHolder(private val binding: CardLocalMessageBinding) : RecyclerView.ViewHolder(binding.root) {
 
     fun bind(message: MessageModel.LocalMessage) {
-        binding.messageText.text = message.text
+        binding.messageT.text = message.text
     }
 }
