@@ -26,7 +26,10 @@
         tools:layout="@layout/fragment_location_required">
         <action
             android:id="@+id/action_start_chat"
-            app:destination="@id/bluetoothChatFragment" />
+            app:destination="@id/bluetoothChatFragment"
+            app:launchSingleTop="true"
+            app:popUpTo="@id/nav_graph"
+            app:popUpToInclusive="true" />
     </fragment>
     <fragment
         android:id="@+id/enableBluetoothFragment"
@@ -35,6 +38,9 @@
         tools:layout="@layout/fragment_enable_bluetooth">
         <action
             android:id="@+id/action_check_location_permissions"
-            app:destination="@id/locationRequiredFragment" />
+            app:destination="@id/locationRequiredFragment"
+            app:launchSingleTop="true"
+            app:popUpTo="@id/nav_graph"
+            app:popUpToInclusive="true" />
     </fragment>
 </navigation>

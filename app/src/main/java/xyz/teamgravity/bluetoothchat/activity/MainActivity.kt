@@ -6,6 +6,7 @@ import xyz.teamgravity.bluetoothchat.R
 import xyz.teamgravity.bluetoothchat.helper.util.ChatServer
 
 class MainActivity : AppCompatActivity() {
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)

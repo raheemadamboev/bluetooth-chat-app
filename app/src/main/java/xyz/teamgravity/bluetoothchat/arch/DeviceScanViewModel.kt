@@ -54,7 +54,7 @@ class DeviceScanViewModel(app: Application) : AndroidViewModel(app) {
         stopScanning()
     }
 
-    fun startScan() {
+    private fun startScan() {
         // If advertisement is not supported on this device then other devices will not be able to
         // discover and connect to it.
         if (!adapter.isMultipleAdvertisementSupported) {

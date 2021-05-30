@@ -2,6 +2,8 @@ package xyz.teamgravity.bluetoothchat.fragment
 
 import android.bluetooth.BluetoothDevice
 import android.content.Context
+import android.content.Intent
+import android.location.LocationManager
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -13,11 +15,11 @@ import androidx.navigation.fragment.findNavController
 import xyz.teamgravity.bluetoothchat.R
 import xyz.teamgravity.bluetoothchat.databinding.FragmentBluetoothChatBinding
 import xyz.teamgravity.bluetoothchat.helper.adapter.chat.ChatAdapter
-import xyz.teamgravity.bluetoothchat.helper.util.DeviceConnectionState
 import xyz.teamgravity.bluetoothchat.helper.extension.gone
 import xyz.teamgravity.bluetoothchat.helper.extension.log
 import xyz.teamgravity.bluetoothchat.helper.extension.visible
 import xyz.teamgravity.bluetoothchat.helper.util.ChatServer
+import xyz.teamgravity.bluetoothchat.helper.util.DeviceConnectionState
 import xyz.teamgravity.bluetoothchat.model.MessageModel
 
 private const val TAG = "BluetoothChatFragment"
@@ -26,6 +28,8 @@ class BluetoothChatFragment : Fragment() {
 
     private var _binding: FragmentBluetoothChatBinding? = null
     private val binding get() = _binding!!
+
+    private lateinit var locationManager: LocationManager
 
     private val deviceConnectionObserver = Observer<DeviceConnectionState> { state ->
         when (state) {
@@ -66,7 +70,11 @@ class BluetoothChatFragment : Fragment() {
         showDisconnected()
 
         binding.connectDevicesB.setOnClickListener {
-            findNavController().navigate(BluetoothChatFragmentDirections.actionFindNewDevice())
+            if (hasGPSEnabled()) {
+                findNavController().navigate(BluetoothChatFragmentDirections.actionFindNewDevice())
+            } else {
+                startActivity(Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS))
+            }
         }
 
         return binding.root
@@ -77,6 +85,11 @@ class BluetoothChatFragment : Fragment() {
         ChatServer.connectionRequest.observe(viewLifecycleOwner, connectionRequestObserver)
         ChatServer.deviceConnection.observe(viewLifecycleOwner, deviceConnectionObserver)
         ChatServer.messages.observe(viewLifecycleOwner, messageObserver)
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        locationManager = requireActivity().getSystemService(Context.LOCATION_SERVICE) as LocationManager
     }
 
     private fun chatWith(device: BluetoothDevice) {
@@ -95,6 +108,8 @@ class BluetoothChatFragment : Fragment() {
             }
         }
     }
+
+    private fun hasGPSEnabled() = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)
 
     private fun showDisconnected() {
         hideKeyboard()
