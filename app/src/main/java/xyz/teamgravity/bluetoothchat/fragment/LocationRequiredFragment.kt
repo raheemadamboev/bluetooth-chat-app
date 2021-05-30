@@ -14,12 +14,14 @@ import androidx.core.app.ActivityCompat
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import xyz.teamgravity.bluetoothchat.databinding.FragmentLocationRequiredBinding
+import xyz.teamgravity.bluetoothchat.helper.extension.visible
 
 class LocationRequiredFragment : Fragment() {
     companion object {
-        private const val TAG = "LocationRequiredFrag:"
-        private const val PERMISSIONS_REQUEST_CODE = 1
-        private val PERMISSIONS = arrayOf(Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION)
+        private val PERMISSIONS = arrayOf(
+            Manifest.permission.ACCESS_FINE_LOCATION,
+            Manifest.permission.ACCESS_COARSE_LOCATION
+        )
 
         @RequiresApi(Build.VERSION_CODES.Q)
         private val PERMISSIONS_Q = arrayOf(
@@ -36,12 +38,18 @@ class LocationRequiredFragment : Fragment() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         _binding = FragmentLocationRequiredBinding.inflate(inflater, container, false)
+        return binding.root
+    }
 
-        // setup click listener on grant permission button
-        binding.grantPermissionButton.setOnClickListener {
-            checkLocationPermission()
-        }
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
 
+        lateInIt()
+        checkLocationPermission()
+        button()
+    }
+
+    private fun lateInIt() {
         // permission result
         permissionLauncher = registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) { permissions ->
             if (permissions.entries.all { it.value }) {
@@ -50,19 +58,32 @@ class LocationRequiredFragment : Fragment() {
                 showError()
             }
         }
-
-        return binding.root
     }
 
-    override fun onStart() {
-        super.onStart()
-        // check location permission when the Fragment becomes visible on screen
-        checkLocationPermission()
+    private fun checkLocationPermission() {
+        if (hasPermissions()) {
+            findNavController().navigate(LocationRequiredFragmentDirections.actionStartChat())
+        } else {
+            requestPermissions()
+        }
+    }
+
+    private fun button() {
+        onPermission()
+    }
+
+    // permission request button
+    private fun onPermission() {
+        binding.permissionB.setOnClickListener {
+            checkLocationPermission()
+        }
     }
 
     private fun showError() {
-        binding.locationErrorMessage.visibility = View.VISIBLE
-        binding.grantPermissionButton.visibility = View.VISIBLE
+        binding.apply {
+            locationErrorText.visible()
+            permissionB.visible()
+        }
     }
 
     // check permissions
@@ -84,14 +105,6 @@ class LocationRequiredFragment : Fragment() {
             permissionLauncher.launch(PERMISSIONS)
         } else {
             permissionLauncher.launch(PERMISSIONS_Q)
-        }
-    }
-
-    private fun checkLocationPermission() {
-        if (hasPermissions()) {
-            findNavController().navigate(LocationRequiredFragmentDirections.actionStartChat())
-        } else {
-            requestPermissions()
         }
     }
 

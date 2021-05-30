@@ -7,26 +7,31 @@
     tools:context=".fragment.LocationRequiredFragment">
 
     <TextView
-        android:id="@+id/location_error_message"
+        android:id="@+id/location_error_text"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginEnd="16dp"
+        android:layout_marginStart="30dp"
+        android:layout_marginEnd="30dp"
         android:text="@string/location_required_error"
+        android:textAlignment="center"
         android:visibility="invisible"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/permission_b"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_chainStyle="packed"
+        tools:visibility="visible" />
 
     <Button
-        android:id="@+id/grant_permission_button"
+        android:id="@+id/permission_b"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
         android:text="@string/grant_permission_prompt"
         android:visibility="invisible"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/location_error_message" />
+        app:layout_constraintTop_toBottomOf="@+id/location_error_text"
+        tools:visibility="visible" />
 </androidx.constraintlayout.widget.ConstraintLayout>
