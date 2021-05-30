@@ -7,12 +7,13 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.RequiresApi
 import androidx.core.app.ActivityCompat
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import xyz.teamgravity.bluetoothchat.databinding.FragmentLocationRequiredBinding
-import xyz.teamgravity.bluetoothchat.helper.extension.log
 
 class LocationRequiredFragment : Fragment() {
     companion object {
@@ -31,12 +32,23 @@ class LocationRequiredFragment : Fragment() {
     private var _binding: FragmentLocationRequiredBinding? = null
     private val binding get() = _binding!!
 
+    private lateinit var permissionLauncher: ActivityResultLauncher<Array<out String>>
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         _binding = FragmentLocationRequiredBinding.inflate(inflater, container, false)
 
         // setup click listener on grant permission button
         binding.grantPermissionButton.setOnClickListener {
             checkLocationPermission()
+        }
+
+        // permission result
+        permissionLauncher = registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) { permissions ->
+            if (permissions.entries.all { it.value }) {
+                findNavController().navigate(LocationRequiredFragmentDirections.actionStartChat())
+            } else {
+                showError()
+            }
         }
 
         return binding.root
@@ -69,9 +81,9 @@ class LocationRequiredFragment : Fragment() {
     // request permissions
     private fun requestPermissions() {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) {
-            ActivityCompat.requestPermissions(requireActivity(), PERMISSIONS, PERMISSIONS_REQUEST_CODE)
+            permissionLauncher.launch(PERMISSIONS)
         } else {
-            ActivityCompat.requestPermissions(requireActivity(), PERMISSIONS_Q, PERMISSIONS_REQUEST_CODE)
+            permissionLauncher.launch(PERMISSIONS_Q)
         }
     }
 
@@ -80,22 +92,6 @@ class LocationRequiredFragment : Fragment() {
             findNavController().navigate(LocationRequiredFragmentDirections.actionStartChat())
         } else {
             requestPermissions()
-        }
-    }
-
-    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-        log(TAG, "onRequestPermissionsResult: ")
-        when (requestCode) {
-            PERMISSIONS_REQUEST_CODE -> {
-                if (grantResults.isNotEmpty() &&
-                    grantResults[0] == PackageManager.PERMISSION_GRANTED
-                ) {
-                    findNavController().navigate(LocationRequiredFragmentDirections.actionStartChat())
-                } else {
-                    showError()
-                }
-            }
         }
     }
 
