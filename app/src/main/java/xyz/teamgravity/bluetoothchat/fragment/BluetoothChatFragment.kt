@@ -10,6 +10,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import xyz.teamgravity.bluetoothchat.R
@@ -22,7 +23,7 @@ import xyz.teamgravity.bluetoothchat.helper.util.ChatServer
 import xyz.teamgravity.bluetoothchat.helper.util.DeviceConnectionState
 import xyz.teamgravity.bluetoothchat.model.MessageModel
 
-private const val TAG = "BluetoothChatFragment"
+private const val TAG = "BluetoothChatFragment:"
 
 class BluetoothChatFragment : Fragment() {
 

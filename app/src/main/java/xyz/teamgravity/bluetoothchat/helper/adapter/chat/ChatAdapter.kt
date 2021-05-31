@@ -43,6 +43,7 @@ class ChatAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
         return messages.size
     }
 
+
     override fun getItemViewType(position: Int): Int {
         log(TAG, "getItemViewType: ")
         return when (messages[position]) {
@@ -55,6 +56,6 @@ class ChatAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     fun addMessage(message: MessageModel) {
         log(TAG, "addMessage: ")
         messages.add(0, message)
-        notifyDataSetChanged()
+        notifyItemInserted(0)
     }
 }
