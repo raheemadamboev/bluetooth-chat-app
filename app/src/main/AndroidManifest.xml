@@ -25,7 +25,10 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.BluetoothChat"
         tools:ignore="AllowBackup">
-        <activity android:name=".activity.MainActivity">
+        <activity
+            android:name=".activity.MainActivity"
+            android:configChanges="orientation|density|fontScale|keyboard|keyboardHidden|layoutDirection|locale|mcc|mnc|colorMode|navigation|screenLayout|screenSize|smallestScreenSize|touchscreen|uiMode"
+            android:screenOrientation="nosensor">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
