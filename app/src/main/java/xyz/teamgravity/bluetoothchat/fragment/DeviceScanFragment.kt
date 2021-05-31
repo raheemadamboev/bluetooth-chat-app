@@ -29,8 +29,83 @@ class DeviceScanFragment : Fragment() {
 
     private val viewModel: DeviceScanViewModel by viewModels()
 
-    private val deviceScanAdapter by lazy {
-        DeviceScanAdapter(onDeviceSelected)
+    private val deviceScanAdapter by lazy { DeviceScanAdapter(onDeviceSelected) }
+
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
+        _binding = FragmentDeviceScanBinding.inflate(inflater, container, false)
+        return binding.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        viewModel.viewState.observe(viewLifecycleOwner, viewStateObserver)
+        updateUI()
+    }
+
+    private fun updateUI() {
+        binding.apply {
+            yourDeviceAddressT.text = getString(R.string.your_device_address) + ChatServer.getYourDeviceAddress()
+            recyclerView.adapter = deviceScanAdapter
+        }
+    }
+
+    private fun showLoading() {
+        log(TAG, "showLoading")
+        binding.apply {
+            scanningContainer.visible()
+
+            recyclerView.gone()
+            noDevicesText.gone()
+            errorT.gone()
+        }
+    }
+
+    private fun showResults(scanResults: Map<String, BluetoothDevice>) {
+        if (scanResults.isNotEmpty()) {
+            binding.apply {
+                recyclerView.visible()
+                deviceScanAdapter.submitList(scanResults.values.toList())
+
+                scanningContainer.gone()
+                noDevicesText.gone()
+                errorT.gone()
+            }
+        } else {
+            showNoDevices()
+        }
+    }
+
+    private fun showNoDevices() {
+        binding.apply {
+            noDevicesText.visible()
+
+            recyclerView.gone()
+            scanningContainer.gone()
+            errorT.gone()
+        }
+    }
+
+    private fun showError(message: String) {
+        log(TAG, "showError: $message")
+        binding.apply {
+            errorT.visible()
+            errorT.text = message
+
+            scanningContainer.gone()
+            noDevicesText.gone()
+        }
+    }
+
+    private fun showAdvertisingError() {
+        showError(getString(R.string.bt_ads_not_supported))
+    }
+
+    // device select button
+    private val onDeviceSelected: (BluetoothDevice) -> Unit = { device ->
+        ChatServer.setCurrentChatConnection(device)
+        // navigate back to chat fragment
+        findNavController().popBackStack()
     }
 
     private val viewStateObserver = Observer<DeviceScanViewState> { state ->
@@ -40,76 +115,6 @@ class DeviceScanFragment : Fragment() {
             is DeviceScanViewState.Error -> showError(state.message)
             is DeviceScanViewState.AdvertisementNotSupported -> showAdvertisingError()
         }.exhaustive
-    }
-
-    private val onDeviceSelected: (BluetoothDevice) -> Unit = { device ->
-        ChatServer.setCurrentChatConnection(device)
-        // navigate back to chat fragment
-        findNavController().popBackStack()
-    }
-
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
-        _binding = FragmentDeviceScanBinding.inflate(inflater, container, false)
-
-        val devAddress = getString(R.string.your_device_address) + ChatServer.getYourDeviceAddress()
-        binding.yourDeviceAddress.text = devAddress
-        binding.deviceList.adapter = deviceScanAdapter
-
-        return binding.root
-    }
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        viewModel.viewState.observe(viewLifecycleOwner, viewStateObserver)
-    }
-
-    private fun showLoading() {
-        log(TAG, "showLoading")
-        binding.scanningLayout.visible()
-
-        binding.deviceList.gone()
-        binding.noDevicesText.gone()
-        binding.error.gone()
-        binding.chatConfirmContainer.gone()
-    }
-
-    private fun showResults(scanResults: Map<String, BluetoothDevice>) {
-        if (scanResults.isNotEmpty()) {
-            binding.deviceList.visible()
-            deviceScanAdapter.submitList(scanResults.values.toList())
-
-            binding.scanningLayout.gone()
-            binding.noDevicesText.gone()
-            binding.error.gone()
-            binding.chatConfirmContainer.gone()
-        } else {
-            showNoDevices()
-        }
-    }
-
-    private fun showNoDevices() {
-        binding.noDevicesText.visible()
-
-        binding.deviceList.gone()
-        binding.scanningLayout.gone()
-        binding.error.gone()
-        binding.chatConfirmContainer.gone()
-    }
-
-    private fun showError(message: String) {
-        log(TAG, "showError: $message")
-        binding.error.visible()
-        binding.errorMessage.text = message
-
-        // hide the action button if one is not provided
-        binding.errorAction.gone()
-        binding.scanningLayout.gone()
-        binding.noDevicesText.gone()
-        binding.chatConfirmContainer.gone()
-    }
-
-    private fun showAdvertisingError() {
-        showError("BLE advertising is not supported on this device")
     }
 
     override fun onDestroyView() {
