@@ -9,4 +9,5 @@
     <color name="white">#FFFFFFFF</color>
     <color name="remote_message_background">#0288D1</color>
     <color name="local_message_background">#D1DBE0</color>
+    <color name="super_light_white">#F2F2F2</color>
 </resources>
