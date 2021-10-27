@@ -1,5 +1,5 @@
 # bluetooth-chat-app
-MVVM app to send text messages over Bluetooth via BLE
+MVVM app to send text messages over Bluetooth via BLE 
 
 **Bluetooth Chat**
 
